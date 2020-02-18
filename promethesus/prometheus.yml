@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 10s
+  external_labels:
+    monitor: 'vehicle-locator-monitor'
+
+scrape_configs:
+
+  - job_name: 'management-rest-service'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.vehicle-locator-management-rest
+        type: A
+        port: 8085
+
+  - job_name: 'route-service'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.route-service
+        type: A
+        port: 8083
+
+  - job_name: 'websocket-service'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.vehicle-locator-websocket
+        type: A
+        port: 8084
+
+  - job_name: 'cache-service'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.cache-service
+        type: A
+        port: 8088

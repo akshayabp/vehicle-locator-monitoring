@@ -1,0 +1,61 @@
+version: '3.1'
+
+services:
+    eurekaserver:
+        image: akshaypawaskar/eureka
+        ports:
+            - "8761:8761"
+    zipkinserver:
+        image: openzipkin/zipkin
+        ports:
+            - "9411:9411"
+            
+    mysqlserver:
+        image: akshaypawaskar/vehicle-locator-mysql
+        ports:
+            - "3306:3306"
+        environment: 
+            MYSQL_ROOT_PASSWORD: "password"
+
+    vehicle-locator-management-rest:
+        image: akshaypawaskar/vehicle-locator-management-rest
+        environment: 
+            spring.profiles.active: "docker"
+        ports:
+            - "8085:8085"
+        depends_on:
+            - eurekaserver
+            - zipkinserver
+            - mysqlserver
+
+    mongo:
+        image: mongo
+        ports:
+            - "27017:27017"
+
+    route-service:
+        image: akshaypawaskar/route-service
+        environment:
+            spring.profiles.active: "docker"  
+        ports:
+            - "8083:8083"        
+        depends_on:
+            - mongo
+
+    prometheus:
+        image: akshaypawaskar/vehicle-locator-prometheus
+        ports:
+            - "9090:9090"
+        deploy:
+            placement:
+                constraints:
+                    - node.role==manager
+
+    grafana:
+        image: akshaypawaskar/vehicle-locator-grafana
+        ports:
+            - "3000:3000"
+        deploy:
+            placement:
+                constraints:
+                    - node.role==manager
