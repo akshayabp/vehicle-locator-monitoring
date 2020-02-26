@@ -36,3 +36,27 @@ scrape_configs:
         - tasks.cache-service
         type: A
         port: 8088
+
+  - job_name: 'spring-cloud-publisher'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.spring-cloud-publisher
+        type: A
+        port: 8082
+
+  - job_name: 'route-service-spring-cloud-subscriber'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.route-service-spring-cloud-subscriber
+        type: A
+        port: 9001
+
+  - job_name: 'websocket-spring-cloud-subscriber'
+    metrics_path: /actuator/prometheus/
+    dns_sd_configs:
+      - names:
+        - tasks.websocket-spring-cloud-subscriber
+        type: A
+        port: 9000
